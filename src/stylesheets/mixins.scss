@@ -1,0 +1,32 @@
+
+@mixin autorize-link {
+    width: fit-content;
+    position: relative;
+    text-decoration: none;
+    color: var(--BaseColor);
+    cursor: pointer;
+
+    &::before{
+        content: "";
+        width: 0%;
+
+        opacity: 0;
+        position: absolute;
+        left: 0;
+        bottom: -1.75px;
+
+        border-bottom: 2px solid var(--SecondColor);
+        transition: all .5s;
+    }
+
+    &:hover{
+        color: var(--SecondColor);
+        &::before{
+            width: 100%;
+            opacity: 1;
+        }
+    }
+}
+
+
+

@@ -1,0 +1,36 @@
+@font-face {
+  font-family: Inter;
+  src: url(assets/fonts/Inter-VariableFont.ttf);
+}
+
+:root {
+  --BaseColor: #4DA1AD;
+  --Background: #393939;
+  --SecondColor: #12626E;
+  --White: #EFEFEF;
+  --Gray: #6E6E6E;
+  --FullWhite: #FFFFFF;
+
+  --GrayOp: #6e6e6e28;
+  --ColorMyMess: #bbe6f1;
+  
+  --BaseFont: Inter;
+}
+
+*, *::before, *::after{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: var(--BaseFont);
+
+  outline: 0;
+}
+
+input, textarea{
+  border: 0;
+  outline: 0;
+}
+
+body{
+  background-color: var(--White);
+}
