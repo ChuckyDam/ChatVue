@@ -106,7 +106,7 @@ const sendNewMessage = (value: string)=>{
 
     &__messages{
         padding: 10px 0;
-        width: 80%;
+        width: 100%;
         display: flex;
         flex-direction: column;
         
@@ -127,7 +127,7 @@ const sendNewMessage = (value: string)=>{
     }
 
     &__InputText{
-        width: 80%;
+        width: 100%;
     }
 
 }

@@ -24,6 +24,16 @@
   font-family: var(--BaseFont);
 
   outline: 0;
+  user-select: none;
+}
+
+Button{
+  border: 0;
+  cursor: pointer;
+}
+
+a{
+  text-decoration: none;
 }
 
 input, textarea{

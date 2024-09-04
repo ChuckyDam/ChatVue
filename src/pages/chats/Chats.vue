@@ -2,28 +2,55 @@
     <div class="Chats">
         <div class="Chats__winGroups">
             <div class="Chats__profile">
+              <div class="Chats__profileData">
+                <BurgerSVG class="Chats__profile-icon" @click="onSettings()"/>
                 <div class="Chats__avatar">
-                    <img :src="url_image+'/src/assets/catCinema.jpg'" alt="">
+                  <img :src="base_url+'/src/assets/catCinema.jpg'" alt="">
                 </div>
                 <div class="Chats__names">
-                    <p>Your status</p>
-                    <p>Nickname</p>
+                  <p>Your status</p>
+                  <p>Nickname</p>
                 </div>
+              </div>
             </div>
             <div class="Chats__groups">
-                {{ url_image }}
+              <TransitionGroup name="Groups_sett">
+                <SettingPats v-if="settings"></SettingPats>
+                <GroupsPars v-if="!settings" :groups="groups"></GroupsPars>
+              </TransitionGroup>
+
+
             </div>
         </div>
         <div class="Chats__winChat">
             <router-view></router-view>
         </div>
+        <GroupSettings/>
     </div>
 </template>
 
 <script setup lang="ts">
 
-    const url_image = import.meta.env.VITE_URL_SITE;
+import  BurgerSVG from "@/assets/icons/burger-menu-svgrepo-com.svg?component"
+import GroupsPars from "@/pages/chats/components/GroupsPars.vue";
+import { Group } from "@/assets/types/Group.ts";
+import { ref } from "vue"
+import SettingPats from "@/pages/chats/components/SettingPars.vue";
+import GroupSettings from "@/components/groupSettings/groupSettings.vue";
 
+const base_url = import.meta.env.VITE_URL_SITE;
+
+const groups = ref<Group[]>([
+  {id_group: "Favourite", name_group: "Favourite", src_img: "", favorite: true},
+  {id_group: "wait", name_group: "Палата 1488", src_img: "wfaef"},
+  {id_group: "2", name_group: "Test", src_img: ""},
+  {id_group: "Палата 228", name_group: "Ser", src_img: ""},
+  {id_group: "4", name_group: "Асу", src_img: ""}
+])
+const settings = ref(false)
+const onSettings = ()=>{
+  settings.value = !settings.value;
+}
 
 </script>
 
@@ -34,24 +61,55 @@
     //     @include reset-list;
     // }
 
+    .Groups_sett-enter-active {
+      transition: all .8s ease-out;
+      transition-delay: .3s;
+    }
+    .Groups_sett-leave-active {
+      transition: all .3s ease-in;
+    }
+    .Groups_sett-enter-from{
+      transform: translateX(-200px);
+      opacity: 0;
+    }
+    .Groups_sett-leave-to {
+      transform: translateX(-200px);
+      opacity: 0;
+    }
+
     .Chats{
         display: flex;
         height: 100%;
 
         &__winGroups{
-            width: 30%;
+          background-color: var(--SecondColor);
+          width: 30%;
         }
         &__profile{
+
+          &Data{
+            padding-left: 20px;
+            width: 100%;
+            height: 100%;
+            background-color: var(--SecondColor);
+            box-shadow: 0 0 10px var(--Background);
+
             display: flex;
+            align-items: center;
             justify-content: center;
             gap: 20px;
-            padding: 20px 0;
-            padding-left: 20px;
+          }
 
-            position: relative;
-            z-index: 1;
-            background-color: var(--SecondColor);
-            box-shadow: -3px 8px 10px var(--Background);
+          height: 15%;
+          padding-bottom: 10px;
+          overflow: hidden;
+
+          &-icon{
+            width: 2.5vw;
+            height: 2.5vw;
+            stroke: var(--BaseColor);
+            cursor: pointer;
+          }
         }
         &__avatar{
             width: 5vw;
@@ -59,8 +117,8 @@
             border-radius: 50%;
             overflow: hidden;
 
-            box-shadow: 0px 0px 5px var(--FullWhite);
-            background-color: var(--FullWhite);
+            box-shadow: 0 0 5px var(--White);
+            background-color: var(--White);
             img{
                 width: 100%;
                 height: 100%;
