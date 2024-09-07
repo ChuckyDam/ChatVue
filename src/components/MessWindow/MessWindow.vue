@@ -77,7 +77,7 @@ const sendNewMessage = (value: string)=>{
             },
             text: newValue,
             date: DateTime.local(),
-            my: Math.random() > 0.5? true:false,
+            my: Math.random() > 0.5,
             id_message: `${DateTime.local()}id`,
             isEdit: false
         }

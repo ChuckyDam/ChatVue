@@ -1,10 +1,10 @@
 <template>
-    <router-link :to="'/chats/'+id_group" class="BtnGroup" :active-class="'BtnGroup_active'">
+    <router-link :to="'/chats/'+id_group" ref="router_link" class="BtnGroup" :active-class="'BtnGroup_active'">
         <div class="BtnGroup__avatar">
             <img v-if="src_img" :src="url_image+'/src/assets/catCinema.jpg'" alt="">
         </div>
         <div class="BtnGroup__nameBox">
-            <p>{{ name_group }}</p>
+            <p>{{ nameGroup }}</p>
         </div>
         <TriplePoints v-if="!favorite" @click="onSettings" class="BtnGroup__settings"></TriplePoints>
     </router-link>
@@ -13,26 +13,51 @@
 
 import TriplePoints from '@/assets/icons/three-points-svgrepo-com.svg?component';
 import {useGroupVisible} from "@/store/groupSettings.ts";
+import {nextTick, ref, watch} from "vue";
+import {useRoute} from "vue-router";
 
 const storeSettingsGroup = useGroupVisible();
 
-defineProps<{
+const props = defineProps<{
     name_group: string;
     id_group: string;
     src_img: string;
     favorite?: boolean;
 }>();
-const url_image = import.meta.env.VITE_URL_SITE;
+const nameGroup = ref<string>(props.name_group);
 
-const onSettings = (e: Event)=>{
+
+const router_link = ref<InstanceType<typeof HTMLElement> | null>(null)
+const ActiveStatus = ref<boolean>(false);
+
+const url_image = import.meta.env.VITE_URL_SITE;
+const route = useRoute();
+
+let unsubActStat = ()=>{};
+
+const updateActiveStatus = async () => {
+  await nextTick();
+  if (!router_link.value) return;
+  unsubActStat();
+  //@ts-ignore
+  ActiveStatus.value = router_link.value.$el.classList.contains("BtnGroup_active");
+  if(ActiveStatus.value){
+    storeSettingsGroup.nameGroup = nameGroup.value;
+    unsubActStat = storeSettingsGroup.$subscribe((_, state)=>{
+
+      nameGroup.value = state.nameGroup;
+
+    })
+  }
+}
+watch(() => [router_link.value, route.path], updateActiveStatus);
+
+const onSettings = (e: MouseEvent)=>{
   e.preventDefault();
   e.stopPropagation();
   const flagX: number = e.pageX;
   const flagY: number = e.pageY;
-
-  console.log(flagX, flagY);
-
-  storeSettingsGroup.open(flagX,flagY);
+  storeSettingsGroup.open(props.id_group, flagX,flagY);
 }
 
 </script>

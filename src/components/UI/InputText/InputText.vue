@@ -53,6 +53,8 @@ emit('edit-message', ({id_message, text}: MessageEdit)=>{
     isEdit.value = true;
     message.value = text.replace(/<br>/g, "\n");
 
+    textArea.value?.focus();
+
     sleep(regularHeightInput, 0);
 });
 

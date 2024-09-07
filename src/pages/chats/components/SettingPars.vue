@@ -27,7 +27,7 @@ import ButtonDefault from "@/components/UI/Button/ButtonDefault.vue";
     gap: 10px;
 
     &__DelBtn{
-      background-color: #e11111;
+      background-color: var(--Danger);
       color: var(--White);
     }
   }

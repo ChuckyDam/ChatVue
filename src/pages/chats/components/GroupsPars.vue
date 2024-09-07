@@ -7,8 +7,6 @@ defineProps<{
   groups: Group[];
 }>();
 
-
-
 </script>
 
 <template>

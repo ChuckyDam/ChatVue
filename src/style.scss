@@ -10,6 +10,7 @@
   --White: #EFEFEF;
   --Gray: #6E6E6E;
   --FullWhite: #FFFFFF;
+  --Danger: #e11111;
 
   --GrayOp: #6e6e6e28;
   --ColorMyMess: #bbe6f1;
@@ -24,7 +25,6 @@
   font-family: var(--BaseFont);
 
   outline: 0;
-  user-select: none;
 }
 
 Button{

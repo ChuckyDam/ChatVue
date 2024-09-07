@@ -3,6 +3,7 @@
 import InputAuth from '@/components/UI/InputAuth/InputAuth.vue';
 import BtnAuth from '@/components/UI/BtnAuth/BtnAuth.vue';
 import { ref } from "vue";
+import {postRegister} from "@/api/API.ts";
 
 const form = ref({
     username: '',
@@ -12,9 +13,12 @@ const form = ref({
 });
 
 const onSub = (event: Event)=>{
-    event.preventDefault();
+  event.preventDefault();
 
-    console.log(form.value);
+  let user = form.value;
+
+  postRegister(user.username, user.login, user.password)
+  // console.log(form.value);
 
 }
 

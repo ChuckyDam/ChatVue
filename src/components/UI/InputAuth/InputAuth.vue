@@ -38,10 +38,6 @@ const props = defineProps({
 });
 
 const typeInput = ref(props.type);
-const classes: String[] = ['InputAuth__Input'];
-if(props.type === 'password'){
-  classes.push('InputAuth__InputPassword')
-}
 
 const emit = defineEmits(['update:value']);
 

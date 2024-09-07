@@ -2,6 +2,8 @@
 
   import {useGroupVisible} from "@/store/groupSettings.ts";
   import {ref} from "vue";
+  import ButtonDefault from "@/components/UI/Button/ButtonDefault.vue";
+  import router from "@/router.ts";
 
   const storeSettingsGroup = useGroupVisible();
 
@@ -10,26 +12,37 @@
     x: 0,
     y: 0
   });
+  const idGroup = ref<string>("");
+
   const blockOpt = ref<HTMLElement>(document.createElement("div"));
   // @ts-ignore
   storeSettingsGroup.$subscribe((mutation, state)=>{
     cords.value = state.cords;
     isOpen.value = state.isOpen;
+    idGroup.value = state.idGroup;
   });
 
-  const onClick = ()=>{
-    console.log("clicked");
+  const onDelete = ()=>{
+    console.log("delete");
+  }
+  const onRename = ()=>{
+    router.push('/chats/'+idGroup.value);
+    storeSettingsGroup.isRename = true;
+  }
+  const onAddUser = ()=>{
+    console.log("users");
   }
 
 </script>
 
 <template>
   <transition name="fade">
-    <div id="groupSettings" @click="onClick()" :style="`top: ${cords.y}px; left: ${cords.x}px`" ref="blockOpt" v-if="isOpen" class="Settings">
-
+    <div id="groupSettings" :style="`top: ${cords.y}px; left: ${cords.x}px`" ref="blockOpt" v-if="isOpen" class="Settings">
+      <ButtonDefault @click="onRename">Rename group</ButtonDefault>
+      <ButtonDefault @click="onAddUser">Users</ButtonDefault>
+      <ButtonDefault @click="onDelete" class="Settings__deleteBtn">Delete group</ButtonDefault>
     </div>
   </transition>
-
 </template>
 
 <style scoped lang="scss">
@@ -55,8 +68,18 @@
 
   z-index: 10;
 
-  width: 10%;
-  height: 10%;
-  background: black;
+  padding: 5px 10px 10px 5px;
+  border-radius: 10px;
+  width: fit-content;
+  background: var(--GrayOp);
+
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+
+  &__deleteBtn{
+    background: var(--Danger);
+    color: var(--White);
+  }
 }
 </style>

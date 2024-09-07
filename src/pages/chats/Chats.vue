@@ -34,23 +34,32 @@
 import  BurgerSVG from "@/assets/icons/burger-menu-svgrepo-com.svg?component"
 import GroupsPars from "@/pages/chats/components/GroupsPars.vue";
 import { Group } from "@/assets/types/Group.ts";
-import { ref } from "vue"
+import {onMounted, ref} from "vue"
 import SettingPats from "@/pages/chats/components/SettingPars.vue";
 import GroupSettings from "@/components/groupSettings/groupSettings.vue";
+import {useGroupsStore} from "@/store/GroupsStore.ts";
+import {getGroups} from "@/api/API.ts";
 
 const base_url = import.meta.env.VITE_URL_SITE;
 
-const groups = ref<Group[]>([
-  {id_group: "Favourite", name_group: "Favourite", src_img: "", favorite: true},
-  {id_group: "wait", name_group: "Палата 1488", src_img: "wfaef"},
-  {id_group: "2", name_group: "Test", src_img: ""},
-  {id_group: "Палата 228", name_group: "Ser", src_img: ""},
-  {id_group: "4", name_group: "Асу", src_img: ""}
-])
+const groups = ref<Group[]>([])
+
+const storeGroupsStore = useGroupsStore();
+storeGroupsStore.$subscribe((_, state)=>{
+  groups.value = state.groups;
+})
+
 const settings = ref(false)
 const onSettings = ()=>{
   settings.value = !settings.value;
 }
+
+onMounted(()=>{
+  getGroups()
+      .then((grops)=>{
+        storeGroupsStore.groups = grops;
+      })
+})
 
 </script>
 
