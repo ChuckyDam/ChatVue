@@ -16,7 +16,10 @@
         </div>
       </div>
       <div class="MesBox__chat">
-        <MessWindow/>
+        <TransitionGroup name="WinMessBox">
+          <MessWindow v-if="!isUsersVisible" :group-id="id"/>
+          <UsersGroup v-if="isUsersVisible"/>
+        </TransitionGroup>
       </div>
     </div>
 </template>
@@ -28,18 +31,22 @@ import {ref, watch} from "vue";
 import {useGroupVisible} from "@/store/groupSettings.ts";
 import {useGroupsStore} from "@/store/GroupsStore.ts";
 import {postRenameGroup} from "@/api/API.ts";
+import UsersGroup from "@/pages/chats/components/UsersGroup.vue";
 
 const storeSettingsGroup = useGroupVisible();
 const storeGroups = useGroupsStore();
 const route = useRoute();
+
 const id = ref<string>(<string>route.params.id);
 const name = ref<string>(storeSettingsGroup.nameGroup);
 const isRename = ref<boolean>(false);
+const isUsersVisible = ref<boolean>(false);
 const inputRename = ref<HTMLInputElement>(document.createElement("input"));
 const valueInp = ref<string>("");
 
 storeSettingsGroup.$subscribe((_, state)=>{
   isRename.value = state.isRename;
+  isUsersVisible.value = state.isUsersVisible;
   name.value = state.nameGroup;
   inputRename.value.focus();
 });
@@ -75,6 +82,23 @@ watch(
 
 </script>
 <style lang="scss" scoped>
+
+.WinMessBox-enter-active {
+  transition: all .8s ease-out;
+  transition-delay: .3s;
+}
+.WinMessBox-leave-active {
+  transition: all .3s ease-in;
+}
+.WinMessBox-enter-from{
+  transform: translateX(0px);
+  opacity: 0;
+}
+.WinMessBox-leave-to {
+  transform: translateX(200px);
+  opacity: 0;
+}
+
     .MesBox{
       display: flex;
       flex-direction: column;

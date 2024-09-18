@@ -4,6 +4,7 @@ import {ref} from "vue";
 export const useGroupVisible = defineStore('GroupSettings', ()=>{
     const isOpen = ref(false);
     const isRename = ref(false);
+    const isUsersVisible = ref(false);
     const cords = ref({
         x:0,
         y:0
@@ -33,5 +34,5 @@ export const useGroupVisible = defineStore('GroupSettings', ()=>{
         };
     }
 
-    return { isOpen, open, cords, isRename, idGroup, nameGroup }
+    return { isOpen, open, cords, isRename, idGroup, nameGroup, isUsersVisible }
 })

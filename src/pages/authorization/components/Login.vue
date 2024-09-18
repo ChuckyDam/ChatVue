@@ -15,6 +15,9 @@
 import InputAuth from '@/components/UI/InputAuth/InputAuth.vue';
 import BtnAuth from '@/components/UI/BtnAuth/BtnAuth.vue';
 import { ref } from 'vue';
+import {postLogin} from "@/api/API.ts";
+import {setCookie} from "@/assets/functions/Cookie.ts";
+import router from "@/router.ts";
 
 
 const form = ref({
@@ -25,7 +28,18 @@ const form = ref({
 const onSub = (event: Event)=>{
     event.preventDefault();
 
-    console.log(form.value);
+    postLogin(form.value.login, form.value.password)
+        .then(res => {
+          if (res.status === 200){
+            setCookie("token", res.data.token);
+            router.push("/chats");
+          }else {
+            console.log(res.status);
+          }
+        })
+        .catch(err => {
+          console.log(err.response.data);
+        })
 
 }
 

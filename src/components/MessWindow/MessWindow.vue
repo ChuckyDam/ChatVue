@@ -8,12 +8,15 @@
                 :text="item.text" 
                 :on-edit="getValuesEditMess" 
                 :my="item.my" 
-                :user="{userId:item.user.userId, username: item.user.username}" 
+                :user="{username: item.user.username}"
                 :date-send="item.date"></Message>
             </template>
         </div>
         <div class="MessWindow__InputText">
-            <InputText :send-edit-message="sendEditMessage" :send-message="sendNewMessage" @edit-message="editMess"/>
+            <InputText
+                :send-edit-message="sendEditMessage"
+                :send-message="sendNewMessage"
+                @edit-message="editMess"/>
         </div>
     </div>
 </template>
@@ -22,9 +25,10 @@
 import Message from "@/components/UI/Message/Message.vue";
 import { MessageEdit, Message as MessageType } from "@/assets/types/Message";
 import InputText from "@/components/UI/InputText/InputText.vue";
-import { ref } from "vue";
+import {onMounted, ref, watch} from "vue";
 import { escapeHtml, randomInteger, sleep } from "@/assets/functions/General";
 import { DateTime } from 'luxon';
+// import {useWebSocket} from "@/store/WebSocket.ts";
 
 // Задачи данного компонента:
 // -Загружать сообщения группы;
@@ -32,9 +36,15 @@ import { DateTime } from 'luxon';
 // -Подгрузить нужные сообщения;
 // -Редактировать/Удалять сообщения.
 
+const props = defineProps<{
+  groupId: string,
+}>()
+
 const messages = ref<MessageType[]>([]);
 const messBox = ref<HTMLElement | null>(null);
 const getValuesEditMess = ref<({ id_message, text }: MessageEdit) => void>(()=>{});
+
+// const WBsocet = useWebSocket();
 
 const editMess = (func: ({ id_message, text }: MessageEdit) => void)=>{
     getValuesEditMess.value = func;
@@ -68,10 +78,9 @@ const sendNewMessage = (value: string)=>{
     // API: отправка сообщения
 
     // Добавление сообщения:
-    let newMessages: MessageType[] = [...messages.value,
+    messages.value = [...messages.value,
         {
             user: {
-                userId: "IDK",
                 username: "Anonymous" + randomInteger(1000, 10000),
                 avatarUrl: null
             },
@@ -82,7 +91,6 @@ const sendNewMessage = (value: string)=>{
             isEdit: false
         }
     ]
-    messages.value = newMessages;
 
     sleep(()=>{ // Для прокрутки вниз при появлении новых сообщений
                 if (!messBox.value) return;
@@ -93,6 +101,17 @@ const sendNewMessage = (value: string)=>{
     }, 0)
 }
 
+watch(()=>props.groupId,()=>{
+  // WBsocet.WBsocket?.getMessages(newId);
+})
+onMounted(()=>{
+  // if(WBsocet.WBsocket) WBsocet.WBsocket.getMessages(props.groupId);
+  // else{
+  //   sleep(()=>{
+  //     WBsocet.WBsocket?.getMessages(props.groupId)
+  //   }, 100)
+  // }
+})
 
 </script>
 <style lang="scss" scoped>

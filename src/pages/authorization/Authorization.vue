@@ -8,14 +8,30 @@
         </router-view>
     </div>
     <div class="Authorization__chat">
-        <MessWindow/>
+<!--        <MessWindow/>-->
     </div>
 </div>
 </template>
 
 <script setup lang="ts">
 
-import MessWindow from '@/components/MessWindow/MessWindow.vue';
+// import MessWindow from '@/components/MessWindow/MessWindow.vue';
+import {postCheckToken} from "@/api/API.ts";
+import router from "@/router.ts";
+import {onMounted} from "vue";
+import {useUserStore} from "@/store/UserStore.ts";
+
+const useUser = useUserStore();
+
+onMounted(()=>{
+  postCheckToken()
+      .then(res => {
+        useUser.setUser(res.data);
+        router.push("/chats");
+      })
+      .catch(()=>{})
+})
+
 
 </script>
 

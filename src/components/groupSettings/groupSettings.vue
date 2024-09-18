@@ -29,8 +29,9 @@
     router.push('/chats/'+idGroup.value);
     storeSettingsGroup.isRename = true;
   }
-  const onAddUser = ()=>{
-    console.log("users");
+  const onUsers = ()=>{
+    router.push('/chats/'+idGroup.value);
+    storeSettingsGroup.isUsersVisible = true;
   }
 
 </script>
@@ -39,7 +40,7 @@
   <transition name="fade">
     <div id="groupSettings" :style="`top: ${cords.y}px; left: ${cords.x}px`" ref="blockOpt" v-if="isOpen" class="Settings">
       <ButtonDefault @click="onRename">Rename group</ButtonDefault>
-      <ButtonDefault @click="onAddUser">Users</ButtonDefault>
+      <ButtonDefault @click="onUsers">Users</ButtonDefault>
       <ButtonDefault @click="onDelete" class="Settings__deleteBtn">Delete group</ButtonDefault>
     </div>
   </transition>

@@ -31,14 +31,17 @@
 
 <script setup lang="ts">
 
-import  BurgerSVG from "@/assets/icons/burger-menu-svgrepo-com.svg?component"
+import BurgerSVG from "@/assets/icons/burger-menu-svgrepo-com.svg?component"
 import GroupsPars from "@/pages/chats/components/GroupsPars.vue";
 import { Group } from "@/assets/types/Group.ts";
 import {onMounted, ref} from "vue"
 import SettingPats from "@/pages/chats/components/SettingPars.vue";
 import GroupSettings from "@/components/groupSettings/groupSettings.vue";
 import {useGroupsStore} from "@/store/GroupsStore.ts";
-import {getGroups} from "@/api/API.ts";
+import {postCheckToken} from "@/api/API.ts";
+import {useWebSocket} from "@/store/WebSocket.ts";
+import router from "@/router.ts";
+import { useUserStore } from "@/store/UserStore";
 
 const base_url = import.meta.env.VITE_URL_SITE;
 
@@ -49,16 +52,38 @@ storeGroupsStore.$subscribe((_, state)=>{
   groups.value = state.groups;
 })
 
+const wbSoc = useWebSocket();
+wbSoc.$subscribe((_, state)=>{
+  if(state.messages[state.messages.length - 1].type === "GROUPS_INFO"){
+    const newGroups = state.messages[state.messages.length - 1].data.groups.reduce((ret: [], group)=>{
+      return [...ret, {
+        name_group: group.name,
+        id_group: `${group.groupId}`,
+        src_img: '',
+      }]
+    }, []);
+    storeGroupsStore.groups = newGroups;
+  }
+})
+
+const useUser = useUserStore();
+
 const settings = ref(false)
 const onSettings = ()=>{
   settings.value = !settings.value;
 }
 
 onMounted(()=>{
-  getGroups()
-      .then((grops)=>{
-        storeGroupsStore.groups = grops;
-      })
+  postCheckToken()
+    .then(res => {
+      useUser.setUser(res.data);
+
+      wbSoc.setWebSocket();
+      wbSoc.getGroups(useUser.groups);
+    })
+    .catch(()=>{
+      router.push("/");
+    })
 })
 
 </script>
